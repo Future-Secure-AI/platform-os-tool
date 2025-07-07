@@ -6,7 +6,7 @@ import buildTool from "./commands/buildTool.ts";
 
 const cli = cac("os");
 
-cli.command("build-tool [folder]", "Build a tool.").action(buildTool);
+cli.command("build-tool <folder>", "Build a tool in a given folder. Ie `os build-tool .` to build current folder").action(buildTool);
 
 cli.help();
 
