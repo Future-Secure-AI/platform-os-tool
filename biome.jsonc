@@ -1,59 +1,52 @@
 {
-    "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-    "files": {
-        "includes": [
-            "**"
-        ],
-        "ignoreUnknown": true
-    },
-    "vcs": {
-        "enabled": true,
-        "clientKind": "git",
-        "useIgnoreFile": true,
-        "defaultBranch": "main"
-    },
-    "formatter": {
-        "lineWidth": 320, // We have large monitors these days, 80 characters is crazy
-        "useEditorconfig": true
-    },
-    "assist": {
-        "actions": {
-            "source": {
-                "organizeImports": "off"
-            }
-        }
-    },
-    "overrides": [
-        {
-            "includes": [
-                "*.ts"
-            ],
-            "linter": {
-                "rules": {
-                    "correctness": {
-                        "noNodejsModules": "off" // We are in a Node environment, and need these
-                    },
-                    "style": {
-                        "noDefaultExport": "off" // We are using this to discourage large files in some cases.
-                    },
-                    "suspicious": {
-                        "noConsole": "warn" // Logging is to be done through the logger, not directly to console
-                    }
-                }
-            }
-        },
-        {
-            "includes": [
-                "./*.ts",
-                "*.test.ts"
-            ],
-            "linter": {
-                "rules": {
-                    "suspicious": {
-                        "noConsole": "off" // Test can log to console, as the logger is impractical here.
-                    }
-                }
-            }
-        }
-    ]
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"files": {
+		"includes": ["**"],
+		"ignoreUnknown": true
+	},
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true,
+		"defaultBranch": "main"
+	},
+	"formatter": {
+		"lineWidth": 320, // We have large monitors these days, 80 characters is crazy
+		"useEditorconfig": true
+	},
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "off"
+			}
+		}
+	},
+	"overrides": [
+		{
+			"includes": ["*.ts"],
+			"linter": {
+				"rules": {
+					"correctness": {
+						"noNodejsModules": "off" // We are in a Node environment, and need these
+					},
+					"style": {
+						"noDefaultExport": "off" // We are using this to discourage large files in some cases.
+					},
+					"suspicious": {
+						"noConsole": "warn" // Logging is to be done through the logger, not directly to console
+					}
+				}
+			}
+		},
+		{
+			"includes": ["./*.ts", "*.test.ts"],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"noConsole": "off" // Test can log to console, as the logger is impractical here.
+					}
+				}
+			}
+		}
+	]
 }

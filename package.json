@@ -1,37 +1,36 @@
 {
-    "name": "platform-os-tool",
-    "version": "0.0.1",
-    "description": "Basic CLI tool for interacting with FSAI Platform OS",
-    "main": "dist/index.js",
-    "bin": {
-        "os": "dist/index.js"
-    },
-    "scripts": {
-        "check": "biome check",
-        "release": "npm run build & npm publish --access public",
-        "build": "tsc && chmod +x dist/index.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Future-Secure-AI/platform-os-tool.git"
-    },
-    "author": "FSAI",
-    "license": "PolyForm Noncommercial License 1.0.0",
-    "type": "module",
-    "devDependencies": {
-        "@biomejs/biome": "^2.0.0",
-        "@types/archiver": "^6.0.3",
-        "@types/copyfiles": "^2.4.4",
-        "@types/node": "^22.15.21",
-        "globals": "^16.2.0",
-        "typescript": "^5.8.3",
-        "vitest": "^3.1.4"
-    },
-    "dependencies": {
-        "archiver": "^7.0.1",
-        "cac": "^6.7.14",
-        "chalk": "^5.4.1",
-        "copyfiles": "^2.4.1",
-        "glob": "^11.0.3"
-    }
+	"name": "platform-os-tool",
+	"version": "0.0.1",
+	"description": "Basic CLI tool for interacting with FSAI Platform OS",
+	"main": "dist/index.js",
+	"bin": {
+		"os": "dist/index.js"
+	},
+	"scripts": {
+		"release": "npm run build & npm publish --access public",
+		"build": "biome check --fix && tsc && chmod +x dist/index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Future-Secure-AI/platform-os-tool.git"
+	},
+	"author": "FSAI",
+	"license": "PolyForm Noncommercial License 1.0.0",
+	"type": "module",
+	"devDependencies": {
+		"@biomejs/biome": "^2.0.0",
+		"@types/archiver": "^6.0.3",
+		"@types/copyfiles": "^2.4.4",
+		"@types/node": "^22.15.21",
+		"globals": "^16.2.0",
+		"typescript": "^5.8.3",
+		"vitest": "^3.1.4"
+	},
+	"dependencies": {
+		"archiver": "^7.0.1",
+		"cac": "^6.7.14",
+		"chalk": "^5.4.1",
+		"copyfiles": "^2.4.1",
+		"glob": "^11.0.3"
+	}
 }
