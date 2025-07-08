@@ -7,12 +7,12 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import { join } from "node:path";
-import type { BaseArgs } from "../models/BaseArgs.ts";
+import type { Options } from "../models/Options.ts";
 import type { Package } from "../models/Package.ts";
 
 const ASSET_PATTERNS = ["*.png", "*.svg", "*.json"];
 
-export default async function packageTool(projectFolder: string, _base: BaseArgs) {
+export default async function packageTool(projectFolder: string, { incrementVersion }: Options) {
 	if (!(await exists(projectFolder))) {
 		process.stdout.write(chalk.red(`Project folder does not exist: ${projectFolder}\n`));
 		process.exit(1);
@@ -36,7 +36,9 @@ export default async function packageTool(projectFolder: string, _base: BaseArgs
 
 	const buildFolder = await build(srcFolder, packageFile);
 	const bundleFile = await bundle(buildFolder, publishFolder, name, version);
-	await incrementPackageVersion(packageFile, 0, 0, 1);
+	if (incrementVersion) {
+		await incrementPackageVersion(packageFile, 0, 0, 1);
+	}
 
 	await fs.rm(buildFolder, { recursive: true, force: true });
 	process.stdout.write(`${chalk.cyan(name)}@${chalk.cyan(version)} packaged as ${chalk.cyan(bundleFile)}.\n`);

@@ -6,7 +6,7 @@ import packageTool from "./commands/packageTool.ts";
 
 const cli = cac("os");
 
-cli.command("package-tool <folder>", "Package a tool in a given folder. Ie `os build-tool .` to build current folder").action(packageTool);
+cli.command("package-tool <folder>", "Package a tool in a given folder. Ie `os build-tool .` to build current folder").option("-i, --no-increment-version", "Do not increment the version in package.json after packaging").action(packageTool);
 
 cli.help();
 
