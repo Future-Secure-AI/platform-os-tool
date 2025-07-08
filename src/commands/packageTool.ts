@@ -77,7 +77,6 @@ async function build(srcFolder: string, packageFile: string): Promise<string> {
 		});
 
 		const buildProcess = spawn(
-			// TODO: Refine these
 			"npx",
 			[
 				"tsc",
@@ -102,7 +101,6 @@ async function build(srcFolder: string, packageFile: string): Promise<string> {
 				"--resolveJsonModule",
 				"--declaration",
 				"--sourceMap",
-				"--skipLibCheck",
 				"--outDir",
 				buildFolder,
 				...files,

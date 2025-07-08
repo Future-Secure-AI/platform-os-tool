@@ -1,13 +1,13 @@
 {
 	"name": "platform-os-tool",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Basic CLI tool for interacting with FSAI Platform OS",
 	"main": "dist/index.js",
 	"bin": {
 		"os": "dist/index.js"
 	},
 	"scripts": {
-		"release": "npm run build & npm publish --access public",
+		"release": "npm run build && npm publish --access public",
 		"build": "biome check --fix && tsc && chmod +x dist/index.js"
 	},
 	"repository": {
