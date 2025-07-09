@@ -6,7 +6,7 @@ import { spawn } from "node:child_process";
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import type { Options } from "../models/Options.ts";
 import type { Package } from "../models/Package.ts";
 
@@ -135,7 +135,7 @@ async function build(srcFolder: string, packageFile: string): Promise<string> {
 
 	await Promise.all([
 		tsc, // Base build
-		fs.copyFile(packageFile, join(buildFolder, "package.json")), // Package
+		fs.copyFile(packageFile, join(buildFolder, basename(packageFile))), // Package
 		...ASSET_PATTERNS.map((pattern) => globFileCopy(srcFolder, buildFolder, pattern)), // Assets
 	]);
 
