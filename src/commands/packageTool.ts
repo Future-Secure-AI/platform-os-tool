@@ -155,7 +155,7 @@ async function build(srcFolder: string, packageFile: string): Promise<string> {
 }
 
 async function bundle(buildFolderPath: string, publishFolder: string, projectName: string, projectVersion: string): Promise<string> {
-	const bundleFile = join(publishFolder, `${projectName}-${projectVersion}.zip`);
+	const bundleFile = join(publishFolder, `${projectName}-${projectVersion.replaceAll(".", "_")}.zip`);
 
 	if (await exists(bundleFile)) {
 		await fs.rm(bundleFile);
