@@ -72,10 +72,11 @@ async function incrementPackageVersion(packageFilePath: string, majorOffset: num
 async function build(srcFolder: string, packageFile: string): Promise<string> {
 	const buildFolder = await createTempFolder();
 	const tsc = new Promise<void>((resolve, reject) => {
-		const files = glob.sync(`${srcFolder}/**/*.ts`, {
+		const files = glob.sync("**/*.ts", {
+			cwd: srcFolder,
 			ignore: ["**/*.test.ts", "**/*.spec.ts", "**/test/**"],
+			absolute: true,
 		});
-
 		const buildProcess = spawn(
 			"npx",
 			[
