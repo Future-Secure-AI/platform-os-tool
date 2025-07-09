@@ -1,6 +1,6 @@
 {
 	"name": "platform-os-tool",
-	"version": "0.0.2",
+	"version": "0.1.0",
 	"description": "Basic CLI tool for interacting with FSAI Platform OS",
 	"main": "dist/index.js",
 	"bin": {
