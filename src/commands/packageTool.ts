@@ -24,21 +24,29 @@ export default async function packageTool(projectFolder: string, { incrementVers
 		process.exit(1);
 	}
 
+	const readmeFile = join(projectFolder, "README.md");
+	if (!(await exists(readmeFile))) {
+		process.stdout.write(chalk.red(`Readme file does not exist: ${readmeFile}\n`));
+		process.exit(1);
+	}
+
 	const packageFile = join(projectFolder, "package.json");
 	if (!(await exists(packageFile))) {
 		process.stdout.write(chalk.red(`Package file does not exist: ${packageFile}\n`));
 		process.exit(1);
 	}
+
+	if (incrementVersion) {
+		await incrementPackageVersion(packageFile, 0, 0, 1);
+	}
+
 	const { name, version } = await readPackage(packageFile);
 
 	const publishFolder = join(projectFolder, "publish");
 	await fs.mkdir(publishFolder, { recursive: true });
 
-	const buildFolder = await build(srcFolder, packageFile);
+	const buildFolder = await build(srcFolder, packageFile, readmeFile);
 	const bundleFile = await bundle(buildFolder, publishFolder, name, version);
-	if (incrementVersion) {
-		await incrementPackageVersion(packageFile, 0, 0, 1);
-	}
 
 	await fs.rm(buildFolder, { recursive: true, force: true });
 	process.stdout.write(`${chalk.cyan(name)}@${chalk.cyan(version)} packaged as ${chalk.cyan(bundleFile)}.\n`);
@@ -69,7 +77,7 @@ async function incrementPackageVersion(packageFilePath: string, majorOffset: num
 	});
 }
 
-async function build(srcFolder: string, packageFile: string): Promise<string> {
+async function build(srcFolder: string, packageFile: string, readmeFile: string): Promise<string> {
 	const buildFolder = await createTempFolder();
 	const tsc = new Promise<void>((resolve, reject) => {
 		const files = glob.sync("**/*.ts", {
@@ -136,6 +144,7 @@ async function build(srcFolder: string, packageFile: string): Promise<string> {
 	await Promise.all([
 		tsc, // Base build
 		fs.copyFile(packageFile, join(buildFolder, basename(packageFile))), // Package
+		fs.copyFile(readmeFile, join(buildFolder, basename(readmeFile))), // Readme
 		...ASSET_PATTERNS.map((pattern) => globFileCopy(srcFolder, buildFolder, pattern)), // Assets
 	]);
 
