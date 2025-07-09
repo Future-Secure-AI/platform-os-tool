@@ -156,7 +156,7 @@ async function build(srcFolder: string, packageFile: string): Promise<string> {
 }
 
 async function bundle(buildFolderPath: string, publishFolder: string, projectName: string, projectVersion: string): Promise<string> {
-	const bundleFile = join(publishFolder, `${projectName}-${projectVersion.replaceAll(".", "_")}.zip`);
+	const bundleFile = join(publishFolder, createName(projectName, projectVersion));
 
 	if (await exists(bundleFile)) {
 		await fs.rm(bundleFile);
@@ -180,6 +180,12 @@ async function bundle(buildFolderPath: string, publishFolder: string, projectNam
 	});
 
 	return bundleFile;
+}
+
+function createName(projectName: string, projectVersion: string): string {
+	const slashIndex = projectName.lastIndexOf("/");
+	const baseName = slashIndex !== -1 ? projectName.substring(slashIndex + 1) : projectName;
+	return `${baseName}-${projectVersion.replaceAll(".", "_")}.zip`;
 }
 
 async function exists(path: string): Promise<boolean> {
