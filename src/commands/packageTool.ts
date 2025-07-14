@@ -5,14 +5,16 @@ import { glob } from "glob";
 import { spawn } from "node:child_process";
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
-import os from "node:os";
-import { basename, join } from "node:path";
+import os, { tmpdir } from "node:os";
+import { join } from "node:path";
 import type { Options } from "../models/Options.ts";
 import type { Package } from "../models/Package.ts";
 
 const ASSET_PATTERNS = ["*.png", "*.svg", "*.json"];
 
-export default async function packageTool(projectFolder: string, { incrementVersion }: Options) {
+export default async function packageTool(projectFolder: string, options: Options) {
+	const { revision = generateDevRevision() } = options;
+
 	if (!(await exists(projectFolder))) {
 		process.stdout.write(chalk.red(`Project folder does not exist: ${projectFolder}\n`));
 		process.exit(1);
@@ -30,15 +32,12 @@ export default async function packageTool(projectFolder: string, { incrementVers
 		process.exit(1);
 	}
 
-	const packageFile = join(projectFolder, "package.json");
+	let packageFile = join(projectFolder, "package.json");
 	if (!(await exists(packageFile))) {
 		process.stdout.write(chalk.red(`Package file does not exist: ${packageFile}\n`));
 		process.exit(1);
 	}
-
-	if (incrementVersion) {
-		await incrementPackageVersion(packageFile, 0, 0, 1);
-	}
+	packageFile = await prepareVersionedPackage(packageFile, revision);
 
 	const { name, version } = await readPackage(packageFile);
 
@@ -52,6 +51,10 @@ export default async function packageTool(projectFolder: string, { incrementVers
 	process.stdout.write(`${chalk.cyan(name)}@${chalk.cyan(version)} packaged as ${chalk.cyan(bundleFile)}.\n`);
 }
 
+function generateDevRevision(): string {
+	return `${Math.floor(Date.now() / 10_000) - 175200000}-dev`; // This number has no significance, it could be any number to reduce length.
+}
+
 async function readPackage(packageFilePath: string): Promise<Package> {
 	const raw = await fs.readFile(packageFilePath, "utf-8");
 	return JSON.parse(raw);
@@ -62,19 +65,20 @@ async function writePackage(packageFilePath: string, packageData: Package): Prom
 	await fs.writeFile(packageFilePath, `${packageJson}\n`, "utf-8");
 }
 
-async function incrementPackageVersion(packageFilePath: string, majorOffset: number, minorOffset: number, revisionOffset: number): Promise<void> {
-	const pkg = await readPackage(packageFilePath);
+async function prepareVersionedPackage(inputPackageFilePath: string, revision: string): Promise<string> {
+	const pkg = await readPackage(inputPackageFilePath);
 
-	const versionParts = pkg.version.split(".").map(Number);
-	versionParts[0] = (versionParts[0] ?? 0) + majorOffset;
-	versionParts[1] = (versionParts[1] ?? 0) + minorOffset;
-	versionParts[2] = (versionParts[2] ?? 0) + revisionOffset;
+	const versionParts = pkg.version.split(".");
+	versionParts[2] = revision;
 	const revisedProjectVersion = versionParts.join(".");
 
-	await writePackage(packageFilePath, {
+	const outputPackageFilePath = join(tmpdir(), `package-${Math.random().toString(36).slice(2, 10)}.tmp`);
+	await writePackage(outputPackageFilePath, {
 		...pkg,
 		version: revisedProjectVersion,
 	});
+
+	return outputPackageFilePath;
 }
 
 async function build(srcFolder: string, packageFile: string, readmeFile: string): Promise<string> {
@@ -143,8 +147,8 @@ async function build(srcFolder: string, packageFile: string, readmeFile: string)
 
 	await Promise.all([
 		tsc, // Base build
-		fs.copyFile(packageFile, join(buildFolder, basename(packageFile))), // Package
-		fs.copyFile(readmeFile, join(buildFolder, basename(readmeFile))), // Readme
+		fs.copyFile(packageFile, join(buildFolder, "package.json")), // Package
+		fs.copyFile(readmeFile, join(buildFolder, "README.md")), // Readme
 		...ASSET_PATTERNS.map((pattern) => globFileCopy(srcFolder, buildFolder, pattern)), // Assets
 	]);
 

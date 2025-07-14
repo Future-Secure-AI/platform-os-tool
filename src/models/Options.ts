@@ -1,3 +1,3 @@
 export type Options = {
-	incrementVersion: boolean;
+	revision: string | undefined;
 };

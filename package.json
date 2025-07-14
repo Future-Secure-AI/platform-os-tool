@@ -1,6 +1,6 @@
 {
 	"name": "platform-os-tool",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"description": "Basic CLI tool for interacting with FSAI Platform OS",
 	"main": "dist/index.js",
 	"bin": {
@@ -31,6 +31,7 @@
 		"cac": "^6.7.14",
 		"chalk": "^5.4.1",
 		"copyfiles": "^2.4.1",
-		"glob": "^11.0.3"
+		"glob": "^11.0.3",
+		"tempy": "^3.1.0"
 	}
 }
