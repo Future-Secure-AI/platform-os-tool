@@ -158,7 +158,8 @@ async function build(srcFolder: string, packageFile: string, readmeFile: string)
 
 	async function globFileCopy(srcFolder: string, dstFolder: string, pattern: string): Promise<void> {
 		return new Promise((resolve, reject) => {
-			copyfiles([join(srcFolder, pattern), dstFolder], { up: 3 }, (error: unknown) => {
+			copyfiles([join(srcFolder, pattern), dstFolder], { up: 1 }, (error: unknown) => {
+				// TODO: There is something hinky about this "up". If invoked from another folder this may exclude assets.
 				if (error) reject(error);
 				else resolve();
 			});
