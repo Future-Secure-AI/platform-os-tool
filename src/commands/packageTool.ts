@@ -10,7 +10,7 @@ import { join } from "node:path";
 import type { Options } from "../models/Options.ts";
 import type { Package } from "../models/Package.ts";
 
-const ASSET_PATTERNS = ["*.png", "*.svg", "*.json"];
+const ASSET_PATTERNS = ["**/*.png", "**/*.svg", "**/*.json"];
 
 export default async function packageTool(projectFolder: string, options: Options) {
 	const { revision = generateDevRevision() } = options;
@@ -158,7 +158,7 @@ async function build(srcFolder: string, packageFile: string, readmeFile: string)
 
 	async function globFileCopy(srcFolder: string, dstFolder: string, pattern: string): Promise<void> {
 		return new Promise((resolve, reject) => {
-			copyfiles([join(srcFolder, pattern), dstFolder], { up: true }, (error: unknown) => {
+			copyfiles([join(srcFolder, pattern), dstFolder], { up: 3 }, (error: unknown) => {
 				if (error) reject(error);
 				else resolve();
 			});
