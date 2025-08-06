@@ -10,7 +10,7 @@ import { join } from "node:path";
 import type { Options } from "../models/Options.ts";
 import type { Package } from "../models/Package.ts";
 
-const ASSET_PATTERNS = ["**/*.png", "**/*.svg", "**/*.json"];
+const ASSET_PATTERNS = ["**/*.png", "**/*.jpg", "**/*.svg", "**/*.json"];
 
 export default async function packageTool(projectFolder: string, options: Options) {
 	const { revision = generateDevRevision() } = options;
